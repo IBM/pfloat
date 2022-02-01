@@ -97,6 +97,7 @@ namespace pfloat_n {
         return convert_<source_t, float>(input, rounding_method);
     }
 
+
     // ---------CONVERSIONS ieee floating point format -> some pfloat type-------------------
 
     // TODO: Enable conversions from double

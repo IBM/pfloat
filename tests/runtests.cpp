@@ -21,24 +21,23 @@ int main() {
 
     fprintf(stdout, "operand1 = 0x%x = %.6f\n", operand1.get(), pfloat2ieee<pfloat8high, float>(operand1));
     fprintf(stdout, "operand2 = 0x%x = %.6f\n", operand2.get(), pfloat2ieee<pfloat8low, float>(operand2));
-    fprintf(stdout, "operand3 = 0x%x = %.6f\n\n", operand3.get(), pfloat2ieee<upfloat8low, float>(operand3));
+    fprintf(stdout, "operand3 = 0x%x = %.6f\n", operand3.get(), pfloat2ieee<upfloat8low, float>(operand3));
 
     result = (pfloat)15.0f * (operand1 + operand2 -
              pfloatMathFunction<upfloat8high>((operand3 + 0.02), sqrtf));
 
-
-    fprintf(stdout, "result = 0x%x = %.6f\n\n", result.get(), pfloat2ieee<pfloat16, float>(result));
-
-    fprintf(stdout, "operand1 = 0x%x = %.6f\n", operand1.get(), pfloat8highTOfloat(operand1));
-    fprintf(stdout, "operand2 = 0x%x = %.6f\n", operand2.get(), pfloat8lowTOfloat(operand2));
-    fprintf(stdout, "operand3 = 0x%x = %.6f\n\n", operand3.get(), upfloat8lowTOfloat(operand3));
+    fprintf(stdout, "CHAINED MATH TEST: result = 0x%x = %.6f\n\n", result.get(), pfloat2ieee<pfloat16, float>(result));
 
     // check clipping to 1.0
     pfloat16 convsource = 2.0;
     auto conv1 = pfloat2ieee<pfloat8high, float>(convsource);
     auto conv2 = pfloat2float<pfloat16>(convsource);
-    fprintf(stdout, "%.6e, %.6e\n\n", conv1, conv2);
+    fprintf(stdout, "CLIPPING TEST: %.6e, %.6e\n\n", conv1, conv2);
 
+    // Single argument math function test
+    auto result_sqrtf_pfloat = pfloatMathFunction<upfloat8high, upfloat16low>(0.2, sqrtf);
+    fprintf(stdout, "SQRTF: via float --> %.6e, via pfloat --> %.6e\n",
+            sqrtf(0.2), pfloat2float<upfloat8high>(result_sqrtf_pfloat));
 
     // Two argument math function test
     auto result_atan2f_pfloat16 = pfloatMathFunction<pfloat16, upfloat8low, pfloat8high>
@@ -50,15 +49,20 @@ int main() {
 
 
     // Vector math tests
+    fprintf(stdout, "VECTOR MATH TESTS\n");
+    fprintf(stdout, "Note: Errors > 1%% only for small magnitudes of results as expected\n");
+
     uint32_t randState = 123456789;
     upfloat8high_64_t vector1;
     pfloat8low_64_t vector2;
-    const float scalingFactor = 1.0;
+    const float scalingFactor = 0.015625;
 
     for (int loop = 0; loop < 100000; loop++) { // run many experiments
 
         // prepare two pfloat vectors (and a float to hold the 'exact' result)
         float multiplyAddResult_float = 0.0f;
+        float accumulateResult_upfloat8high_f = 0.0f;
+        float accumulateResult_pfloat8low_f = 0.0f;
         float sumOfSquaresResult_upfloat8high_f = 0.0f;
         float sumOfSquaresResult_pfloat8low_f = 0.0f;
         // initialize vector with 'random' 8 bit values ...
@@ -74,6 +78,8 @@ int main() {
             sumOfSquaresResult_pfloat8low_f += (scalingFactor *
                                                 pfloat2ieee<pfloat8low, float>(vector2[i]) *
                                                 pfloat2ieee<pfloat8low, float>(vector2[i])) ;
+            accumulateResult_upfloat8high_f += (scalingFactor * pfloat2ieee<upfloat8high, float>(vector1[i]));
+            accumulateResult_pfloat8low_f += (scalingFactor * pfloat2ieee<pfloat8low, float>(vector2[i]));
         }
 
         // execute multiply add function (including scaling and reduced bit-size math)
@@ -83,6 +89,9 @@ int main() {
                  pfloat_n::nearest,
                  0xFFFFF800,
                  0xFFFFFF80);
+
+        auto accumulateResult_upfloat8high_pfloat = pfloatAccumulate<pfloat16, upfloat8high_64_t>(vector1, scalingFactor);
+        auto accumulateResult_pfloat8low_pfloat = pfloatAccumulate<pfloat16,pfloat8low_64_t>(vector2, scalingFactor);
 
         // execute sum of squares function (including scaling and reduced bit-size math)
         auto sumOfSquaresResult_upfloat8high_p = pfloatSumOfSquares<pfloat16high, upfloat8high_64_t>
@@ -102,16 +111,34 @@ int main() {
         pfloat percentageErrorMultiplyAdd =
                 100.0f * ((pfloat2ieee<pfloat16high, float>(multiplyAddResult_pfloat) - multiplyAddResult_float) /
                        multiplyAddResult_float);
-        if (percentageErrorMultiplyAdd > 1.0)
+        if (std::abs(percentageErrorMultiplyAdd.get()) > 1.0)
             fprintf(stdout, "MULTADD[%d]: pfloat --> %.6e,\t float -->  %.6e, \terror = %.2f %% \n",
                     loop,
                     pfloat2ieee<pfloat16high, float>(multiplyAddResult_pfloat),
                     multiplyAddResult_float, percentageErrorMultiplyAdd.get() );
 
+        pfloat percentageErrorAccumulate =
+                100.0f * ((pfloat2float<pfloat16high>(accumulateResult_upfloat8high_pfloat) - accumulateResult_upfloat8high_f) /
+                          accumulateResult_upfloat8high_f);
+        if (std::abs(percentageErrorAccumulate.get()) > 1.0)
+            fprintf(stdout, "ACCUMULATE pfloat16high [%d]: pfloat --> %.6e,\t float -->  %.6e, \terror = %.2f %% \n",
+                    loop,
+                    pfloat2float<pfloat16high>(accumulateResult_upfloat8high_pfloat),
+                    accumulateResult_upfloat8high_f, percentageErrorAccumulate.get() );
+        percentageErrorAccumulate =
+                100.0f * ((pfloat2float<pfloat16high>(accumulateResult_pfloat8low_pfloat) - accumulateResult_pfloat8low_f) /
+                          accumulateResult_pfloat8low_f);
+        if (std::abs(percentageErrorAccumulate.get()) > 1.0)
+            fprintf(stdout, "ACCUMULATE pfloat8low [%d]: pfloat --> %.6e,\t float -->  %.6e, \terror = %.2f %% \n",
+                    loop,
+                    pfloat2float<pfloat16high>(accumulateResult_pfloat8low_pfloat),
+                    accumulateResult_pfloat8low_f, percentageErrorAccumulate.get() );
+
+
         pfloat percentageErrorSumOfSquares1 =
                 100.0f * ((pfloat2ieee<pfloat16high, float>(sumOfSquaresResult_upfloat8high_p) - sumOfSquaresResult_upfloat8high_f) /
                           sumOfSquaresResult_upfloat8high_f);
-        if (percentageErrorSumOfSquares1.get() > 0.01)
+        if (std::abs(percentageErrorSumOfSquares1.get()) > 1.0)
             fprintf(stdout, "SUMSQARES1[%d]: pfloat --> %.6e,\t float -->  %.6e, \terror = %.2f %% \n",
                     loop,
                     pfloat2ieee<pfloat16high, float>(sumOfSquaresResult_upfloat8high_p),
@@ -121,7 +148,7 @@ int main() {
         pfloat percentageErrorSumOfSquares2 =
                 100.0f * ((pfloat2ieee<pfloat8low, float>(sumOfSquaresResult_pfloat8low_p) - sumOfSquaresResult_pfloat8low_f) /
                           sumOfSquaresResult_pfloat8low_f);
-        if (percentageErrorSumOfSquares2.get() > 0.001)
+        if (std::abs(percentageErrorSumOfSquares2.get()) > 5.0)
             fprintf(stdout, "SUMSQARES2[%d]: pfloat --> %.6e,\t float -->  %.6e, \terror = %.2f %% \n",
                     loop,
                     pfloat2ieee<pfloat8low, float>(sumOfSquaresResult_pfloat8low_p),
@@ -131,6 +158,7 @@ int main() {
 
 
 
+    fprintf(stdout, "\n DOING CONVERSION CONSISTENCY VERIFICATION\n");
     float conv_res = 0.0;
 
     uint8_t run = 0xFF;
@@ -213,6 +241,7 @@ int main() {
             }
         }
     } while (run16 != 0xFFFF);
+    fprintf(stdout, "Done\n\n");
 
     pfloat8high test_pfloat8h;
 
