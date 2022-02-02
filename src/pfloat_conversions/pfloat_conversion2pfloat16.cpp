@@ -5,7 +5,7 @@
 namespace pfloat_n {
 
     // A helper to maintain state of a simple max length LCG random number generator
-    uint32_t pfloat16_randomState = 0x12345678;
+    uint32_t pfloat16_randomState = 0x87654321;
 
     // Note: Candidate is the to-be rounded 16-bit pfloat16 (exp & mantissa), INCLUDING the range bits;
     //       When rounding up, an overflow happens if exponent and mantissa in a range are all one, at which
@@ -18,7 +18,7 @@ namespace pfloat_n {
 
         switch (rounding_method) {
             case random:
-                if ((__builtin_popcount(pfloat16_randomState *= 32310901u + 12347u)) & 0x00000001)
+                if ((__builtin_popcount(pfloat16_randomState *= 32310901u + 1013904223u)) & 0x00000001)
                     break; // if the number of set bits in our random state is odd, we round down (=do nothing)
                     // if the number of set bits in our random state is even, we fall thru to 'up'
             case up:

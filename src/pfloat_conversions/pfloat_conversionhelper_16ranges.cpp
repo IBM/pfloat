@@ -1,3 +1,5 @@
+// TODO: Consider deleting obsolete code
+
 #include "pfloat_conversions/pfloat_conversionhelper_16ranges.h"
 
 

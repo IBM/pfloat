@@ -158,6 +158,8 @@ namespace pfloat_n{
     // TODO: Consider adding conversions to double
 
     // ---------CONVERSIONS TO/FROM bfloat16----------------
+    // TODO: Consider to implement conversion from all possible types (not only from float)
+    // TODO: Add random (and stochastic) rounding
     inline uint16_t floatTObfloat16(float input,
                                     pfloatRoundingMethod_enum rounding_method = pfloat_DefaultRoundingMethod){
         uint32_t bits = *(uint32_t *) &input;

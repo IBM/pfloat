@@ -306,7 +306,6 @@ Disclaimers:
 - Play around with pfloat format combinations in math operations (as e.g. relevant for CNN simulation)
 - Play around with bit sizes of underlying math
 - Complete implementation of pfloat32, and for completeness add pfloat64
-- Complete random rounding implementation and add multi-bit stochastic rounding
 - Reluctantly (re-)assess the choices for the binary buckets per range (aka resolution vs dynamic range)
 - Look a derivative applications of pfloats, in particular for (lossy) floating point and/or integer compression, e.g. 64-bit double to 16-bit pfloat
   - pfloat16_1024_512_256_128_64_32_16_8_8_8_8_16_32_64_128_256_512 might be an interesting vfloat type candidate for this

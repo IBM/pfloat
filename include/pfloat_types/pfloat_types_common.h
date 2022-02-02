@@ -16,11 +16,12 @@ namespace pfloat_n {
 
     // ---------ROUNDING-------------------
     // down: round towards zero; this is the same as truncating mantissa bits
-    // up: round towards magnitude 1,
+    // up: round towards magnitude 1 (if any of the bits at LSB-N are set),
     // nearest: round magnitude up if LSB-1 is one, round magnitude down if LSB-1 is zero
     // random: randomly round up or down
+    // stochastic: stochastically round up or down (comparing all LSB-N bit against a 'random' value)
     enum pfloatRoundingMethod_enum {
-        down, up, nearest, random
+        down, up, nearest, random, stochastic
     };
 
     ///////////////////////////////////////////////////////////////////

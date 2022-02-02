@@ -11,7 +11,7 @@ namespace pfloat_n {
     //       bits become zero (as desired)
     inline void pfloat16Rounding(uint16_t& candidate,
                                  uint32_t magnitudebits,
-                                 uint32_t LSBminus1, uint32_t range11LSBminus1allBits,
+                                 uint32_t LSBminus1, uint32_t rangeLSBminus1allBits,
                                  pfloatRoundingMethod_enum rounding_method) {
 
         switch (rounding_method) {
@@ -20,7 +20,7 @@ namespace pfloat_n {
                     break; // if the number of set bits in our random state is odd, we round down (=do nothing)
                 // if the number of set bits in our random state is even, we fall thru to 'up'
             case up:
-                if (magnitudebits & range11LSBminus1allBits)  // check all mantissa bits at and below LSB-1
+                if (magnitudebits & rangeLSBminus1allBits)  // check all mantissa bits at and below LSB-1
                     candidate += 0x0001u; // we round up
                 break;
             case nearest:
@@ -29,13 +29,25 @@ namespace pfloat_n {
                 break;
             case down:;
                 break; // nothing to do when truncating extra mantissa bits from the float
+            case stochastic: {
+                uint32_t limit = ((pfloatRoundingRandomState *= 32310901u + 1013904223u) >> 7) &
+                                 rangeLSBminus1allBits;
+                if ((__builtin_popcount(pfloatRoundingRandomState *= 32310901u + 1013904223u)) & 0x00000001) {
+                    if ((magnitudebits & rangeLSBminus1allBits) > limit)
+                        candidate += 0x01u; // we round up (otherwise, we implicitly round down)
+                } else {
+                    if ((magnitudebits & rangeLSBminus1allBits) >= limit)
+                        candidate += 0x01u; // we round up (otherwise, we implicitly round down)
+                }
+            }
+                break;
             default:; // never reached
         }
     }
     // same for 8-bit rounding
     inline void pfloat8Rounding(uint8_t& candidate,
                                  uint32_t magnitudebits,
-                                 uint32_t LSBminus1, uint32_t range11LSBminus1allBits,
+                                 uint32_t LSBminus1, uint32_t rangeLSBminus1allBits,
                                  pfloatRoundingMethod_enum rounding_method) {
 
         switch (rounding_method) {
@@ -44,7 +56,7 @@ namespace pfloat_n {
                     break; // if the number of set bits in our random state is odd, we round down (=do nothing)
                 // if the number of set bits in our random state is even, we fall thru to 'up'
             case up:
-                if (magnitudebits & range11LSBminus1allBits)  // check all mantissa bits at and below LSB-1
+                if (magnitudebits & rangeLSBminus1allBits)  // check all mantissa bits at and below LSB-1
                     candidate += 0x01u; // we round up
                 break;
             case nearest:
@@ -53,6 +65,18 @@ namespace pfloat_n {
                 break;
             case down:;
                 break; // nothing to do when truncating extra mantissa bits from the float
+            case stochastic: {
+                uint32_t limit = ((pfloatRoundingRandomState *= 32310901u + 1013904223u) >> 7) &
+                                 rangeLSBminus1allBits;
+                if ((__builtin_popcount(pfloatRoundingRandomState *= 32310901u + 1013904223u)) & 0x00000001) {
+                    if ((magnitudebits & rangeLSBminus1allBits) > limit)
+                        candidate += 0x01u; // we round up (otherwise, we implicitly round down)
+                } else {
+                    if ((magnitudebits & rangeLSBminus1allBits) >= limit)
+                        candidate += 0x01u; // we round up (otherwise, we implicitly round down)
+                }
+            }
+                break;
             default:; // never reached
         }
     }
@@ -89,6 +113,18 @@ namespace pfloat_n {
                         break;
                     case down:;
                         break; // nothing to do when truncating extra mantissa bits from the float
+                    case stochastic: {
+                        uint32_t limit = ((pfloatRoundingRandomState *= 32310901u + 1013904223u) >> 7) &
+                                         helper.range11LSBminus1allBits;
+                        if ((__builtin_popcount(pfloatRoundingRandomState *= 32310901u + 1013904223u)) & 0x00000001) {
+                            if ((bits & helper.range11LSBminus1allBits) > limit)
+                                result = helper.one; // we round up and assign one
+                        } else {
+                            if ((bits & helper.range11LSBminus1allBits) >= limit)
+                                result = helper.one; // we round up and assign one
+                        }
+                        }
+                        break;
                     default:; // never reached
                 }
             else {
@@ -133,6 +169,18 @@ namespace pfloat_n {
                         break;
                     case down:;
                         break; // nothing to do when truncating extra mantissa bits from the float
+                    case stochastic: {
+                        uint32_t limit = ((pfloatRoundingRandomState *= 32310901u + 1013904223u) >> 7) &
+                                         helper.range11LSBminus1allBits;
+                        if ((__builtin_popcount(pfloatRoundingRandomState *= 32310901u + 1013904223u)) & 0x00000001) {
+                            if ((bits & helper.range11LSBminus1allBits) > limit)
+                                result = helper.smallest; // // we round up and assign smallest
+                        } else {
+                            if ((bits & helper.range11LSBminus1allBits) >= limit)
+                                result = helper.smallest; // // we round up and assign smallest
+                        }
+                    }
+                        break;
                     default:; // never reached
                 }
             }
@@ -178,6 +226,18 @@ namespace pfloat_n {
                         break;
                     case down:;
                         break; // nothing to do when truncating extra mantissa bits from the float
+                    case stochastic: {
+                        uint32_t limit = ((pfloatRoundingRandomState *= 32310901u + 1013904223u) >> 7) &
+                                         helper.range11LSBminus1allBits;
+                        if ((__builtin_popcount(pfloatRoundingRandomState *= 32310901u + 1013904223u)) & 0x00000001) {
+                            if ((bits & helper.range11LSBminus1allBits) > limit)
+                                result = helper.one; // we round up and assign one
+                        } else {
+                            if ((bits & helper.range11LSBminus1allBits) >= limit)
+                                result = helper.one; // we round up and assign one
+                        }
+                    }
+                        break;
                     default:; // never reached
                 }
             else {
@@ -222,6 +282,18 @@ namespace pfloat_n {
                         break;
                     case down:;
                         break; // nothing to do when truncating extra mantissa bits from the float
+                    case stochastic: {
+                        uint32_t limit = ((pfloatRoundingRandomState *= 32310901u + 1013904223u) >> 7) &
+                                         helper.range11LSBminus1allBits;
+                        if ((__builtin_popcount(pfloatRoundingRandomState *= 32310901u + 1013904223u)) & 0x00000001) {
+                            if ((bits & helper.range11LSBminus1allBits) > limit)
+                                result = helper.smallest; // we round up and assign smallest representable magnitude
+                        } else {
+                            if ((bits & helper.range11LSBminus1allBits) >= limit)
+                                result = helper.smallest; // we round up and assign smallest representable magnitude
+                        }
+                    }
+                        break;
                     default:; // never reached
                 }
             }

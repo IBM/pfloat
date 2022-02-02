@@ -1,6 +1,8 @@
 #ifndef PFLOAT_PFLOAT_CONVERSIONHELPER_16RANGES_H
 #define PFLOAT_PFLOAT_CONVERSIONHELPER_16RANGES_H
 
+// TODO: Consider deleting obsolete code
+
 #include "pfloat_types/pfloat_types_common.h"
 
 namespace pfloat_n {
