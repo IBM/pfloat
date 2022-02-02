@@ -136,7 +136,8 @@ A total of ten number formats are addressed here. The nomenclature used is strai
 - A prefix 'u' means unsigned type; absence of this prefix implicitly means signed type;
 - A postfix number indicates how many bits are used in the type implementation (8 --> 8 bits, 16 --> 16 bits, 32 --> 32-bits);
 - The postfix [high |low] gives a hint about the size of the dynamic range;
-- Absence of a dynamic range postfix for 16- and 32-bit types indicate that the dynamic range is same as for `float`.
+- Absence of a dynamic range postfix for `pfloat16` indicates that the dynamic range is same as for `float`.
+- Absence of a dynamic range postfix for `pfloat32` indicates that the dynamic range is 2x that of `pfloat16`.
 
 
 | #bits | Signed | #ranges | Type name| #mantissa bits| range | dynamic range|
@@ -149,8 +150,9 @@ A total of ten number formats are addressed here. The nomenclature used is strai
 |16|yes|16|pfloat16low| 9 - 12| [-1.0 .. 1.0] | 2^-30 + 10^-38 = 9.3e-10 = -181dB
 |16|no|16|upfloat16high| 9 - 12| [0.0 .. 1.0] |2^-29 = 1.86E-9 = -174dB|
 |16|no|16|upfloat16low| 10 - 13| [0.0 .. 1.0] |2^-29 = 1.86E-9 = -174dB|
-|16|yes|16|pfloat16| 5 - 11| ~ -2^-127 .. 2^127 | ~1e-39 = -780dB |
-|32|yes|16|pfloat32| 21 - 27| ~ -2^-127 .. 2^127 |~1e-39 = -780dB |
+|16|yes|16|pfloat16| 5 - 11| ~ +-[0.0,2^-127 .. 2^127] | ~1e-39 = -780dB |
+|32|yes|16|pfloat32| 20 - 26| ~ +-[0.0,2^-255 .. 2^255] |~1e-77 = -1'540dB |
+|64|yes|16|pfloat64| 51 - 57| ~ +-[0.0,2^-511 .. 2^511] |~1e-150 = -3'000dB |
 
 Table1: Summary of implemented floating point types
 
@@ -176,10 +178,13 @@ opposed to BFLOAT16 with 7 bits.
 Conversion float from/to BFLOAT16 
 (implemented with underlying type uint16_t) is available, just in case needed for comparisons.
 
-Note: The range bit patterns are chosen such that small 
+Notes: 
+- The range bit patterns are chosen such that small 
 magnitudes have small range encoding values. 
 This guarantees that the bit representation 
 monotonically increases for increasing floating point magnitudes.
+- The choice for the number of exponent bits in each range of each pfloat type was guided by the desire that for each type, a next type readily exists which has (at least) 2x the dynamic range, and in most cases also 2x the number of mantissa bits. This to enable preservation of information when multiplying. `double` would serve as next type for `pfloat64`.
+- We abstain for the time being from implementing the unsigned `upfloat16/32/64` types, which would just would replace the sign bit at MSB and one of the range bits with two extra mantissa bits at LSB.
 
 ### pfloat math
 
@@ -200,15 +205,15 @@ We also implemented single and dual argument arbitrary math functions (all that 
 supported by the `cmath` library). Last not least, we also 
 implemented various vector operations, in particular multiply add and similar.
 
+It's worth noting that a CPU cache line size of 64 bytes - as is in widespread use -
+can hold 64 pfloat8 elements, or one pfloat8 8x8 matrix.
+
 We applied template programming to enable straight forward use of different pfloat types. 
 For example, it is easily possible to use multyply-add with one vector (weights?) 
-be represented in upfloa8l, the other vector (inputs?) represented as pfloat8h, with 
-the result returned a pfloat16h. This can deliver up to 10bits of resolution in the result. 
+be represented in upfloa8low, the other vector (inputs?) represented as pfloat8h, with 
+the result returned a pfloat16high. This can deliver up to 10bits of resolution in the result. 
 
-It's worth noting that a CPU cache line size of 64 bytes - as is in widespread use - 
-can hold 64 pfloat8 elements, or one pfloat8 8x8 matrix. 
-
-A multiply-add operation of a first vector consisting of unsigned
+Such a multiply-add operation of a first vector consisting of unsigned
 element type `upfloat8lhigh` (e.g. cell output) values with a second
 vector consisting of signed element type `pfloat8low` (e.g. synaptic weights) 
 values, each input vector having 64 elements (and hence consuming 64 Bytes
@@ -224,7 +229,7 @@ auto multiplyAddResult_pfloat =
                  0xFFFFFF80);
 ```
 Note the explicit
-scaling factor, rounding method and mantissa truncation to 12/16 bits). `auto` type specifier
+scaling factor, rounding method and mantissa truncation to 12/16 bits. `auto` type specifier
 can be used because the return type (`pfloat16high`) is specified in the template parameter.
 
 Implementation of matrix math is prepared but not done yet.
@@ -304,12 +309,13 @@ Disclaimers:
 - Increase test coverage
 - Implement matrix math (including tensorflow-like operations)
 - Play around with pfloat format combinations in math operations (as e.g. relevant for CNN simulation)
-- Play around with bit sizes of underlying math
+- Play around with bit sizes of underlying math 
+- Implement and use a bit accurate custom ALU to prepare for HW implementation
 - Complete implementation of pfloat32, and for completeness add pfloat64
 - Reluctantly (re-)assess the choices for the binary buckets per range (aka resolution vs dynamic range)
-- Look a derivative applications of pfloats, in particular for (lossy) floating point and/or integer compression, e.g. 64-bit double to 16-bit pfloat
-  - pfloat16_1024_512_256_128_64_32_16_8_8_8_8_16_32_64_128_256_512 might be an interesting vfloat type candidate for this
+- Look at derivative applications of pfloats, in particular for (lossy) floating point and/or integer compression, e.g. 64-bit double to 32/16-bit pfloat
+  - `vfloat32_1023_9_8_7_6_5_4_3_3_3_3_4_5_6_7_8_9` and `vfloat16_1023_9_8_7_6_5_4_3_3_3_3_4_5_6_7_8_9` are the  vfloat type candidates for this
 - Having fun!
 
-PRs welcome!
+Bug reports and/or PRs welcome!
 
