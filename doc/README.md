@@ -4,7 +4,7 @@ See pdf files in this directory for details.
 ### pfloat16, pfloat32, pfloat64
 For CNN simulations, it can be beneficial to have 
 consecutive 16->32->64-bit types, where each 
-'higher type' has 2x the dynamic range an more 
+'higher type' has 2x the dynamic range and more 
 than 2x the number of manitssa bits.
 
 ### pfloat16d, pfloat32d, pfloat64d
