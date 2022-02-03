@@ -1,8 +1,8 @@
-# pfloat: A 8-/16-/32-bit floating point number family
+# pfloat: A 8-/16-/32-/64-bit floating point number family
 
 Key words: floating point number representation, variable precision, 
-CNN simulation, reduced bit size, FP8, FP16, FP32, bfloat, BFLOAT16, 
-convolutional neural network
+CNN simulation, reduced bit size, FP8, FP16, FP32, FP64, bfloat, BFLOAT16, 
+convolutional neural network, lossy compression of 64-bit double
 
 ## Introduction
 Floating point representation of 'real world' numbers are required for simulations 
@@ -185,6 +185,10 @@ This guarantees that the bit representation
 monotonically increases for increasing floating point magnitudes.
 - The choice for the number of exponent bits in each range of each pfloat type was guided by the desire that for each type, a next type readily exists which has (at least) 2x the dynamic range, and in most cases also 2x the number of mantissa bits. This to enable preservation of information when multiplying. `double` would serve as next type for `pfloat64`.
 - We abstain for the time being from implementing the unsigned `upfloat16/32/64` types, which would just would replace the sign bit at MSB and one of the range bits with two extra mantissa bits at LSB.
+- We defined `pfloat8x`, which encodes the sign bit in the range bits, which allows to have different dynamic range and resolution for positive and negative values
+  - The design of `pfloat8x` was chosen such that multiply add of vectors up to 128 elements of magnitude <1.0 won't overflow, while maintaining maximum resolution for positive numbers.
+- We defined `pfloat16d`, `pfloat32d`, `pfloat64d`, which all have the same dynamic range as `double`.
+  - These types are intended for approximate computing, where the availability of the full dynamic range when calculating (coarsly) with lowre bit numbers is important. 
 
 ### pfloat math
 
