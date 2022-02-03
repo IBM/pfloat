@@ -184,11 +184,11 @@ magnitudes have small range encoding values.
 This guarantees that the bit representation 
 monotonically increases for increasing floating point magnitudes.
 - The choice for the number of exponent bits in each range of each pfloat type was guided by the desire that for each type, a next type readily exists which has (at least) 2x the dynamic range, and in most cases also 2x the number of mantissa bits. This to enable preservation of information when multiplying. `double` would serve as next type for `pfloat64`.
-- We abstain for the time being from implementing the unsigned `upfloat16/32/64` types, which would just would replace the sign bit at MSB and one of the range bits with two extra mantissa bits at LSB.
+- We abstain for the time being from implementing the unsigned `upfloat16/32/64` types, which would just would replace the sign bit at MSB with an extra mantissa bits at LSB.
 - We defined `pfloat8x`, which encodes the sign bit in the range bits, which allows to have different dynamic range and resolution for positive and negative values
-  - The design of `pfloat8x` was chosen such that multiply add of vectors up to 128 elements of magnitude <1.0 won't overflow, while maintaining maximum resolution for positive numbers.
-- We defined `pfloat16d`, `pfloat32d`, `pfloat64d`, which all have the same dynamic range as `double`.
-  - These types are intended for approximate computing, where the availability of the full dynamic range when calculating (coarsly) with lowre bit numbers is important. 
+  - The design of `pfloat8x` was chosen such that multiply add of vectors up to 128 elements of magnitude <1.0 won't overflow, while maintaining maximum resolution for positive numbers, this being at least 3 bits for range [2^-11..1.0) with 4 bits in [2^-3..1.0).
+- We also defined `pfloat16d`, `pfloat32d`, `pfloat64d`, which all have the same dynamic range as `double`.
+  - These types are intended for approximate computing, where the availability of the full dynamic range when calculating (coarsly) with lower bit numbers is important. 
 
 ### pfloat math
 
@@ -210,11 +210,11 @@ supported by the `cmath` library). Last not least, we also
 implemented various vector operations, in particular multiply add and similar.
 
 It's worth noting that a CPU cache line size of 64 bytes - as is in widespread use -
-can hold 64 pfloat8 elements, or one pfloat8 8x8 matrix.
+can hold 64 pfloat8 elements, or four pfloat8 4x4 matrices, or one pfloat8 8x8 matrix.
 
 We applied template programming to enable straight forward use of different pfloat types. 
-For example, it is easily possible to use multyply-add with one vector (weights?) 
-be represented in upfloa8low, the other vector (inputs?) represented as pfloat8h, with 
+For example, it is easily possible to use multiply-add with one vector (synaptic weights?) 
+be represented in upfloa8low, the other vector (cell outputs?) represented as pfloat8h, with 
 the result returned a pfloat16high. This can deliver up to 10bits of resolution in the result. 
 
 Such a multiply-add operation of a first vector consisting of unsigned
