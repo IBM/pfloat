@@ -2,7 +2,7 @@
 
 Key words: floating point number representation, variable precision, 
 CNN simulation, reduced bit size, FP8, FP16, FP32, FP64, bfloat, BFLOAT16, 
-convolutional neural network, lossy compression of 64-bit double
+convolutional neural network, approximate computing, lossy compression of 64-bit double
 
 ## Introduction
 Floating point representation of 'real world' numbers are required for simulations 
@@ -29,7 +29,7 @@ We are addressing here
 general and specific cases where the number of exponent and mantissa bits 
 is _not equal_ for all representable floating point numbers. We implement a selected
 set of 8-/16-/32-bit floating point types which are judged to be good candidates 
-for simulations of CNNs (Convolutional Neural Networks).
+for simulations of CNNs (Convolutional Neural Networks) and/or for approximate computing.
 
 ## The generalized case: vfloat
 
@@ -107,13 +107,14 @@ unsigned vfloat types.
 
 To limit the number of vfloat types that need to be implemented, 
 a couple of self-induced limitations are introduced:
-1) The range of representable numbers is limited to either magnitudes of 0.0 and 1.0 (_both_ inclusive), or such as to be compatible with IEEE754-2008 (aka float);
+1) The range of representable numbers is limited to either magnitudes of 0.0 and 1.0 (_both_ inclusive), or such as to be compatible with IEEE754-2008 (aka float, double);
 2) The number of ranges is either 4 or 16 (2 or 4 range bits);
 3) The number of exponent bits between two adjacent ranges can differ by a maximum of 1 bit, and is either progressively increasing or decreasing (or remains constant);
-4) The number of mantissa bits is maximized for numbers close to magnitude 1.0, at the cost of reduced number of mantissa bits for very small (or very large) numbers;
-5) The respective dynamic ranges are chosen to be 'potentially relevant' for CNN simulations;
-6) For pfloat types covering [0.0..1.0] and [-1.0..1.0], bit patterns of range-bits all zero, exponent-bits all zero, mantissa-bits all zero represents 0.0, and bit patterns of range-bits all zero, exponent-bits all zero, mantissa-bits 0b0...01 represents 1.0;
-7) For pfloat types covering [0.0..1.0] and [-1.0..1.0], there is obviously no 'inf', and we abstain from defining a 'nan' (disclaimer: we're considering to use -0.0 to represent 'nan' in the future)
+4) The exponents inside the ranges and at range boundaries are spaced by 1 (read: no gaps);
+5) The number of mantissa bits is maximized for numbers close to magnitude 1.0, at the cost of reduced number of mantissa bits for very small (or very large) numbers;
+6) The respective dynamic ranges are chosen to be 'potentially relevant' for CNN simulations of approximate computing;
+7) For pfloat types covering [0.0..1.0] and [-1.0..1.0], bit patterns of range-bits all zero, exponent-bits all zero, mantissa-bits all zero represents 0.0, and bit patterns of range-bits all zero, exponent-bits all zero, mantissa-bits 0b0...01 represents 1.0;
+8) For pfloat types covering [0.0..1.0] and [-1.0..1.0], there is obviously no 'inf', and we abstain from defining a 'nan' (disclaimer: we're considering to use -0.0 to represent 'nan' in the future)
 
 The progressive increase/decrease of exponent bits over ranges 
 leads to the 'p' in the **p**float naming convention.
@@ -131,7 +132,9 @@ what you're looking for. In this case, please keep looking (elsewhere)...
 
 ### Implemented pfloat number formats
 
-A total of ten number formats are addressed here. The nomenclature used is straight forward:
+A total of ten number formats are addressed here in quite some detail, with 1+3 more with lesser detail initially.
+
+The nomenclature used is straight forward:
 - The name 'pfloat' indicates membership in the type family;
 - A prefix 'u' means unsigned type; absence of this prefix implicitly means signed type;
 - A postfix number indicates how many bits are used in the type implementation (8 --> 8 bits, 16 --> 16 bits, 32 --> 32-bits);
