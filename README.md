@@ -156,6 +156,7 @@ The nomenclature used is straight forward:
 |16|yes|16|pfloat16| 5 - 11| ~ +-[0.0,2^-127 .. 2^127] | ~1e-39 = -780dB |
 |32|yes|16|pfloat32| 20 - 26| ~ +-[0.0,2^-255 .. 2^255] |~1e-77 = -1'540dB |
 |64|yes|16|pfloat64| 51 - 57| ~ +-[0.0,2^-511 .. 2^511] |~1e-150 = -3'000dB |
+Note: Additional types defined and visualized in [./doc](./doc)
 
 Table1: Summary of implemented floating point types
 
@@ -164,6 +165,8 @@ exponent-mantissa distributions as well as the bias values for
 each pfloat type as a function of the related ranges:
 ![pfloat formats overview](./doc/graphs/pfloatSummary.png "Figure 1: pfloat formats overview")
 Figure 1: pfloat formats overview
+
+The [./doc](./doc) directory contains the full set of pfloat type visualizations. 
 
 As one can easily appreciate from the figure above, the resolution 
 (= number of mantissa bits) is optimized for numbers close to 1.0. 
@@ -186,10 +189,11 @@ Notes:
 magnitudes have small range encoding values. 
 This guarantees that the bit representation 
 monotonically increases for increasing floating point magnitudes.
-- The choice for the number of exponent bits in each range of each pfloat type was guided by the desire that for each type, a next type readily exists which has (at least) 2x the dynamic range, and in most cases also 2x the number of mantissa bits. This to enable preservation of information when multiplying. `double` would serve as next type for `pfloat64`.
+- The choice for the number of exponent bits in each range of each pfloat type was guided by the desire that for each type, a next type readily exists which has (at least) 2x the dynamic range, and in most cases also (more than) 2x the number of mantissa bits. This to enable preservation of information when multiplying. `double` would serve as next type for `pfloat64`.
 - We abstain for the time being from implementing the unsigned `upfloat16/32/64` types, which would just would replace the sign bit at MSB with an extra mantissa bits at LSB.
-- We defined `pfloat8x`, which encodes the sign bit in the range bits, which allows to have different dynamic range and resolution for positive and negative values
-  - The design of `pfloat8x` was chosen such that multiply add of vectors up to 128 elements of magnitude <1.0 won't overflow, while maintaining maximum resolution for positive numbers, this being at least 3 bits for range [2^-11..1.0) with 4 bits in [2^-3..1.0).
+- We defined `pfloat8x` & `pfloat16x`, which encodes the sign bit in the range bits, which allows to have different dynamic range and resolution for positive and negative values
+  - The design of `pfloat8x` was chosen such that multiply add of vectors up to 32 elements of magnitude <1.0 won't overflow, while maintaining maximum resolution for positive numbers, this being at least 3 bits for range [2^-11..1.0) with 4 bits in [2^-3..1.0).
+  - The encoding of the sign bits enables to achieve the same dynamic range for positive and negaive values, while the resolution is higher for positive values.
 - We also defined `pfloat16d`, `pfloat32d`, `pfloat64d`, which all have the same dynamic range as `double`.
   - These types are intended for approximate computing, where the availability of the full dynamic range when calculating (coarsly) with lower bit numbers is important. 
 
