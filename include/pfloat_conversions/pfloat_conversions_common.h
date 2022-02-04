@@ -47,9 +47,16 @@ namespace pfloat_n{
     // ---------CONVERSIONS TO upfloat8low----------------
     // Convert FP32 (aka float) to upfloat8low and round
     upfloat8low floatTOupfloat8low(float fp32,
-                                  pfloatRoundingMethod_enum rounding_method = pfloat_DefaultRoundingMethod);
+                                   pfloatRoundingMethod_enum rounding_method = pfloat_DefaultRoundingMethod);
     upfloat8low_t floatTOupfloat8low_t(float fp32,
-                                      pfloatRoundingMethod_enum rounding_method = pfloat_DefaultRoundingMethod);
+                                       pfloatRoundingMethod_enum rounding_method = pfloat_DefaultRoundingMethod);
+
+    // ---------CONVERSIONS TO pfloat8x----------------
+    // Convert FP32 (aka float) to pfloat8x and round
+    pfloat8x floatTOpfloat8x(float fp32,
+                                pfloatRoundingMethod_enum rounding_method = pfloat_DefaultRoundingMethod);
+    pfloat8x_t floatTOpfloat8x_t(float fp32,
+                                 pfloatRoundingMethod_enum rounding_method = pfloat_DefaultRoundingMethod);
 
     // ---------CONVERSIONS TO pfloat16high-------------------
     // Convert FP32 (aka float) to pfloat16high and round
@@ -79,6 +86,13 @@ namespace pfloat_n{
     upfloat16low_t floatTOupfloat16low_t(float fp32,
                                          pfloatRoundingMethod_enum rounding_method = pfloat_DefaultRoundingMethod);
 
+    // ---------CONVERSIONS TO pfloat16x----------------
+    // Convert FP32 (aka float) to pfloat16x and round
+    pfloat16x floatTOpfloat16x(float fp32,
+                              pfloatRoundingMethod_enum rounding_method = pfloat_DefaultRoundingMethod);
+    pfloat16x_t floatTOpfloat16x_t(float fp32,
+                                  pfloatRoundingMethod_enum rounding_method = pfloat_DefaultRoundingMethod);
+
     // ---------CONVERSIONS TO pfloat16----------------
     // Convert FP32 (aka float) to pfloat16 and round
     pfloat16 floatTOpfloat16(float fp32,
@@ -97,12 +111,59 @@ namespace pfloat_n{
     pfloat32_t floatTOpfloat32_t(double fp32,
                                  pfloatRoundingMethod_enum rounding_method = pfloat_DefaultRoundingMethod);
 
+    // ---------CONVERSIONS TO pfloat64----------------
+    // Convert FP32 (aka float) to pfloat64 and round
+    pfloat64 floatTOpfloat64(float fp32,
+                             pfloatRoundingMethod_enum rounding_method = pfloat_DefaultRoundingMethod);
+    pfloat64_t floatTOpfloat64_t(float fp32,
+                                 pfloatRoundingMethod_enum rounding_method = pfloat_DefaultRoundingMethod);
+
+    // ---------CONVERSIONS TO pfloat16d----------------
+    // Convert FP32 (aka float) to pfloat16d and round
+    pfloat16d floatTOpfloat16d(float fp32,
+                              pfloatRoundingMethod_enum rounding_method = pfloat_DefaultRoundingMethod);
+    pfloat16d_t floatTOpfloat16d_t(float fp32,
+                                  pfloatRoundingMethod_enum rounding_method = pfloat_DefaultRoundingMethod);
+
+    // ---------CONVERSIONS TO pfloat32d----------------
+    // Convert FP32 (aka float) to pfloat32d and round
+    pfloat32d floatTOpfloat32d(float fp32,
+                              pfloatRoundingMethod_enum rounding_method = pfloat_DefaultRoundingMethod);
+    pfloat32d_t floatTOpfloat32d_t(float fp32,
+                                  pfloatRoundingMethod_enum rounding_method = pfloat_DefaultRoundingMethod);
+    pfloat32d floatTOpfloat32d(double fp32,
+                              pfloatRoundingMethod_enum rounding_method = pfloat_DefaultRoundingMethod);
+    pfloat32d_t floatTOpfloat32d_t(double fp32,
+                                  pfloatRoundingMethod_enum rounding_method = pfloat_DefaultRoundingMethod);
+
+    // ---------CONVERSIONS TO pfloat64d----------------
+    // Convert FP32 (aka float) to pfloat64d and round
+    pfloat64d floatTOpfloat64d(float fp32,
+                              pfloatRoundingMethod_enum rounding_method = pfloat_DefaultRoundingMethod);
+    pfloat64d_t floatTOpfloat64d_t(float fp32,
+                                  pfloatRoundingMethod_enum rounding_method = pfloat_DefaultRoundingMethod);
+
     // ---------CONVERSIONS TO pfloat----------------
     // Convert FP32 (aka float) to pfloat
     pfloat floatTOpfloat(float fp32,
-                             pfloatRoundingMethod_enum rounding_method = pfloat_DefaultRoundingMethod);
+                         pfloatRoundingMethod_enum rounding_method = pfloat_DefaultRoundingMethod);
     pfloat_t floatTOpfloat_t(float fp32,
-                                 pfloatRoundingMethod_enum rounding_method = pfloat_DefaultRoundingMethod);
+                             pfloatRoundingMethod_enum rounding_method = pfloat_DefaultRoundingMethod);
+    // ---------CONVERSIONS TO pdouble----------------
+    // Convert FP32 (aka float) to pdouble
+    pdouble floatTOpdouble(float fp32,
+                         pfloatRoundingMethod_enum rounding_method = pfloat_DefaultRoundingMethod);
+    pdouble_t floatTOpdouble_t(float fp32,
+                             pfloatRoundingMethod_enum rounding_method = pfloat_DefaultRoundingMethod);
+    // ---------CONVERSIONS TO pbfloat----------------
+    // Convert FP32 (aka float) to pbfloat
+    pbfloat floatTOpbfloat(float fp32,
+                         pfloatRoundingMethod_enum rounding_method = pfloat_DefaultRoundingMethod);
+    pbfloat_t floatTOpbfloat_t(float fp32,
+                             pfloatRoundingMethod_enum rounding_method = pfloat_DefaultRoundingMethod);
+
+
+    //////////////////////////////////////////////////////////////////////////////
 
     // ---------CONVERSIONS TO float----------------
     // Convert pfloat8 (aka pfloat8high) to FP32 (aka float)
@@ -125,6 +186,10 @@ namespace pfloat_n{
     // Convert upfloat8low to FP32 (aka float)
     float upfloat8lowTOfloat(upfloat8low_t upfloat8);
     float upfloat8lowTOfloat(upfloat8low upfloat8);
+    // Convert pfloat8x to FP32 (aka float)
+    float pfloat8xTOfloat(pfloat8x_t pfloat8x);
+    float pfloat8xTOfloat(pfloat8x pfloat8x);
+
     // Convert pfloat16high to FP32 (aka float)
     float pfloat16highTOfloat(pfloat16high_t pfloat16);
     float pfloat16highTOfloat(pfloat16high pfloat16);
@@ -137,15 +202,39 @@ namespace pfloat_n{
     // Convert upfloat16low to FP32 (aka float)
     float upfloat16lowTOfloat(upfloat16low_t upfloat16);
     float upfloat16lowTOfloat(upfloat16low upfloat16);
+    // Convert pfloat16x to FP32 (aka float)
+    float pfloat16xTOfloat(pfloat16x_t pfloat8x);
+    float pfloat16xTOfloat(pfloat16x pfloat8x);
+
     // Convert pfloat16 to FP32 (aka float)
     float pfloat16TOfloat(pfloat16_t pfloat16);
     float pfloat16TOfloat(pfloat16 pfloat16);
     // Convert pfloat32 to FP32 (aka float)
     float pfloat32TOfloat(pfloat32_t pfloat32);
     float pfloat32TOfloat(pfloat32 pfloat32);
+    // Convert pfloat64 to FP32 (aka float)
+    float pfloat64TOfloat(pfloat64_t pfloat64);
+    float pfloat64TOfloat(pfloat64 pfloat64);
+
+    // Convert pfloat16d to FP32 (aka float)
+    float pfloat16dTOfloat(pfloat16d_t upfloat16);
+    float pfloat16dTOfloat(pfloat16d upfloat16);
+    // Convert pfloat32d to FP32 (aka float)
+    float pfloat32dTOfloat(pfloat32d_t pfloat32d);
+    float pfloat32dTOfloat(pfloat32d pfloat32d);
+    // Convert pfloat64d to FP32 (aka float)
+    float pfloat64dTOfloat(pfloat64d_t pfloat64d);
+    float pfloat64dTOfloat(pfloat64d pfloat64d);
+
     // Convert pfloat to FP32 (aka float)
     float pfloatTOfloat(pfloat_t pfloat);
     float pfloatTOfloat(pfloat pfloat);
+    // Convert pdouble to FP32 (aka float)
+    float pdoubleTOfloat(pdouble_t pdouble);
+    float pdoubleTOfloat(pdouble pdouble);
+    // Convert pbfloat to FP32 (aka float)
+    float pbfloatTOfloat(pbfloat_t pbfloat);
+    float pbfloatTOfloat(pbfloat pbfloat);
 
     // dummy helpers
     inline float floatTOfloat(float input,

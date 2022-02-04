@@ -51,7 +51,7 @@ namespace pfloat_n {
     private:
         pfloat8high_t value = 0x00;
 
-    }; // end of class pfloat8
+    }; // end of class pfloat8high
 
     // Make sure that a pfloat8 object is only 1 Byte in size
     static_assert(sizeof(pfloat8) == 1, "Size of pfloat8high is NOT equal to 1 Byte");

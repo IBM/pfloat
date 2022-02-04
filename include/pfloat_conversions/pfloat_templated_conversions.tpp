@@ -58,35 +58,49 @@ namespace pfloat_n {
            pfloat_createConversion_p2p(base_t, pfloat8low) \
            pfloat_createConversion_p2p(base_t, upfloat8high) \
            pfloat_createConversion_p2p(base_t, upfloat8low) \
+           pfloat_createConversion_p2p(base_t, pfloat8x) \
            pfloat_createConversion_p2p(base_t, pfloat16high) \
            pfloat_createConversion_p2p(base_t, pfloat16low) \
            pfloat_createConversion_p2p(base_t, upfloat16high) \
            pfloat_createConversion_p2p(base_t, upfloat16low) \
+           pfloat_createConversion_p2p(base_t, pfloat16x) \
            pfloat_createConversion_p2p(base_t, pfloat16) \
            pfloat_createConversion_p2p(base_t, pfloat32) \
-           pfloat_createConversion_p2p(base_t, pfloat)
+           pfloat_createConversion_p2p(base_t, pfloat64) \
+           pfloat_createConversion_p2p(base_t, pfloat16d) \
+           pfloat_createConversion_p2p(base_t, pfloat32d) \
+           pfloat_createConversion_p2p(base_t, pfloat64d) \
+           pfloat_createConversion_p2p(base_t, pfloat) \
+           pfloat_createConversion_p2p(base_t, pdouble) \
+           pfloat_createConversion_p2p(base_t, pbfloat)
 
 
     // ---------CONVERSIONS pfloat -> ieee floating point format-------------------
 
     // TODO: Enable conversions to double
     pfloat_createConversion(pfloat8high, float)
-//    pfloat_createConversion(pfloat8, double)
     pfloat_createConversion(pfloat8low, float)
-//    pfloat_createConversion(pfloat8low, double)
     pfloat_createConversion(upfloat8high, float)
-//    pfloat_createConversion(upfloat8, double)
     pfloat_createConversion(upfloat8low, float)
-//    pfloat_createConversion(upfloat8low, double)
+    pfloat_createConversion(pfloat8x, float)
 
     pfloat_createConversion(pfloat16high, float)
     pfloat_createConversion(pfloat16low, float)
     pfloat_createConversion(upfloat16high, float)
     pfloat_createConversion(upfloat16low, float)
+    pfloat_createConversion(pfloat16x, float)
 
     pfloat_createConversion(pfloat16, float)
     pfloat_createConversion(pfloat32, float)
+    pfloat_createConversion(pfloat64, float)
+
+    pfloat_createConversion(pfloat16d, float)
+    pfloat_createConversion(pfloat32d, float)
+    pfloat_createConversion(pfloat64d, float)
+
     pfloat_createConversion(pfloat, float)
+    pfloat_createConversion(pdouble, float)
+    pfloat_createConversion(pbfloat, float)
 
     template<class source_t, class target_t>
     target_t pfloat2ieee(source_t input, pfloatRoundingMethod_enum rounding_method) {
@@ -106,15 +120,25 @@ namespace pfloat_n {
     pfloat_createConversion(float, pfloat8low)
     pfloat_createConversion(float, upfloat8high)
     pfloat_createConversion(float, upfloat8low)
+    pfloat_createConversion(float, pfloat8x)
 
     pfloat_createConversion(float, pfloat16high)
     pfloat_createConversion(float, pfloat16low)
     pfloat_createConversion(float, upfloat16high)
     pfloat_createConversion(float, upfloat16low)
+    pfloat_createConversion(float, pfloat16x)
 
     pfloat_createConversion(float, pfloat16)
     pfloat_createConversion(float, pfloat32)
+    pfloat_createConversion(float, pfloat64)
+
+    pfloat_createConversion(float, pfloat16d)
+    pfloat_createConversion(float, pfloat32d)
+    pfloat_createConversion(float, pfloat64d)
+
     pfloat_createConversion(float, pfloat)
+    pfloat_createConversion(float, pdouble)
+    pfloat_createConversion(float, pbfloat)
 
     template<typename source_t, class target_t>
     target_t ieee2pfloat(source_t ieee_float, pfloatRoundingMethod_enum rounding_method) {
@@ -131,13 +155,25 @@ namespace pfloat_n {
     pfloat_createAllConversions_p2p(pfloat8low)
     pfloat_createAllConversions_p2p(upfloat8high)
     pfloat_createAllConversions_p2p(upfloat8low)
+    pfloat_createAllConversions_p2p(pfloat8x)
+
     pfloat_createAllConversions_p2p(pfloat16high)
     pfloat_createAllConversions_p2p(pfloat16low)
     pfloat_createAllConversions_p2p(upfloat16high)
     pfloat_createAllConversions_p2p(upfloat16low)
+    pfloat_createAllConversions_p2p(pfloat16x)
+
     pfloat_createAllConversions_p2p(pfloat16)
     pfloat_createAllConversions_p2p(pfloat32)
+    pfloat_createAllConversions_p2p(pfloat64)
+
+    pfloat_createAllConversions_p2p(pfloat16d)
+    pfloat_createAllConversions_p2p(pfloat32d)
+    pfloat_createAllConversions_p2p(pfloat64d)
+
     pfloat_createAllConversions_p2p(pfloat)
+    pfloat_createAllConversions_p2p(pdouble)
+    pfloat_createAllConversions_p2p(pbfloat)
 
 
     template<typename source_t, class target_t>

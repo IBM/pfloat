@@ -10,7 +10,10 @@ namespace pfloat_n {
         #define pfloat_DefaultRoundingMethod nearest
 #endif
 #ifndef pfloat_DefaultFP32MantissaMask
-        #define pfloat_DefaultFP32MantissaMask 0xFFFFFFFFu
+#define pfloat_DefaultFP32MantissaMask 0xFFFFFFFFu
+#endif
+#ifndef pfloat_DefaultFP64MantissaMask
+#define pfloat_DefaultFP64MantissaMask 0xFFFFFFFFFFFFFFFFu
 #endif
 
 
@@ -38,7 +41,6 @@ namespace pfloat_n {
     typedef uint8_t pfloat8high_t; // a pfloat8 figure has 8 bits
     typedef pfloat8high_t pfloat8h_t; // a shortcut
     typedef pfloat8high_t pfloat8_t; // A shortcut with the assumption that pfloat8high is the 'workhorse'
-
     ///////////////////////////////////////////////////////////////////
     //
     //       PFLOAT8LOW aka PFLOAT8L
@@ -47,7 +49,6 @@ namespace pfloat_n {
     typedef pfloat8low pfloat8l; // a shortcut
     typedef uint8_t pfloat8low_t; // a pfloat8 figure has 8 bits
     typedef pfloat8low_t pfloat8l_t; // a shortcut
-
     ///////////////////////////////////////////////////////////////////
     //
     //       UPFLOAT8HIGH aka UPFLOAT8H aka UPFLOAT8 (unsigned pfloat8h)
@@ -58,7 +59,6 @@ namespace pfloat_n {
     typedef uint8_t upfloat8high_t; // a pfloat8 figure has 8 bits
     typedef upfloat8high_t upfloat8h_t; // a shortcut
     typedef upfloat8high_t upfloat8_t; // A shortcut with the assumption that pfloat8high is the 'workhorse'
-
     ///////////////////////////////////////////////////////////////////
     //
     //       UPFLOAT8LOW aka UPFLOAT8L (unsigned pfloat8l)
@@ -67,7 +67,6 @@ namespace pfloat_n {
     typedef upfloat8low upfloat8l; // A shortcut
     typedef uint8_t upfloat8low_t; // a pfloat8 figure has 8 bits
     typedef upfloat8low_t upfloat8l_t; // a shortcut
-
     ///////////////////////////////////////////////////////////////////
     //
     //       PFLOAT8X
@@ -83,7 +82,6 @@ namespace pfloat_n {
     typedef pfloat16high pfloat16h; // A shortcut
     typedef uint16_t pfloat16high_t; // a pfloat16h figure has 16 bits
     typedef pfloat16high_t pfloat16h_t; // a shortcut
-
     ///////////////////////////////////////////////////////////////////
     //
     //       PFLOAT16LOW
@@ -92,7 +90,6 @@ namespace pfloat_n {
     typedef pfloat16low pfloat16l; // A shortcut
     typedef uint16_t pfloat16low_t; // a pfloat16l figure has 16 bits
     typedef pfloat16low_t pfloat16l_t; // a shortcut
-
     ///////////////////////////////////////////////////////////////////
     //
     //       UPFLOAT16HIGH
@@ -101,7 +98,6 @@ namespace pfloat_n {
     typedef upfloat16high upfloat16h; // A shortcut
     typedef uint16_t upfloat16high_t; // a upfloat16h figure has 16 bits
     typedef upfloat16high_t uupfloat16h_t; // a shortcut
-
     ///////////////////////////////////////////////////////////////////
     //
     //       UPFLOAT16LOW
@@ -110,13 +106,12 @@ namespace pfloat_n {
     typedef upfloat16low upfloat16l; // A shortcut
     typedef uint16_t upfloat16low_t; // a upfloat16l figure has 16 bits
     typedef upfloat16low_t uupfloat16l_t; // a shortcut
-
     ///////////////////////////////////////////////////////////////////
     //
     //       PFLOAT16X
     //
     class pfloat16x; // forward declaration
-    typedef uint8_t pfloat16x_t; // a pfloat8 figure has 8 bits
+    typedef uint16_t pfloat16x_t; // a pfloat8 figure has 8 bits
 
     ///////////////////////////////////////////////////////////////////
     //
@@ -167,6 +162,12 @@ namespace pfloat_n {
     //
     class pdouble; // forward declaration
     typedef double pdouble_t; // a pdouble figure has 64 bits in the form of a double
+    ///////////////////////////////////////////////////////////////////
+    //
+    //       PBFLOAT (a dummy class to implement bfloat in class form)
+    //
+    class pbfloat; // forward declaration
+    typedef uint16_t pbfloat_t; // a pbfloat figure has 16 bits in the form of a Uint16_t
 
     ///////////////////////////////////////////////////////////////////////////////////
     // ----------------------------------------------
@@ -227,6 +228,7 @@ namespace pfloat_n {
     pfloat_create_all32bitVectorTypeAndClass(pfloat64d)
     pfloat_create_all32bitVectorTypeAndClass(pfloat)
     pfloat_create_all32bitVectorTypeAndClass(pdouble)
+    pfloat_create_all32bitVectorTypeAndClass(pbfloat)
 
 
     ///////////////////////////////////////////////////////////////////////////////////
