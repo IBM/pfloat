@@ -70,6 +70,13 @@ namespace pfloat_n {
 
     ///////////////////////////////////////////////////////////////////
     //
+    //       PFLOAT8X
+    //
+    class pfloat8x; // forward declaration
+    typedef uint8_t pfloat8x_t; // a pfloat8 figure has 8 bits
+
+    ///////////////////////////////////////////////////////////////////
+    //
     //       PFLOAT16HIGH
     //
     class pfloat16high; // forward declaration
@@ -106,11 +113,17 @@ namespace pfloat_n {
 
     ///////////////////////////////////////////////////////////////////
     //
+    //       PFLOAT16X
+    //
+    class pfloat16x; // forward declaration
+    typedef uint8_t pfloat16x_t; // a pfloat8 figure has 8 bits
+
+    ///////////////////////////////////////////////////////////////////
+    //
     //       PFLOAT16
     //
     class pfloat16; // forward declaration
     typedef uint16_t pfloat16_t; // a pfloat16 figure has 16 bits
-
     ///////////////////////////////////////////////////////////////////
     //
     //       PFLOAT32
@@ -119,10 +132,41 @@ namespace pfloat_n {
     typedef uint32_t pfloat32_t; // a pfloat32 figure has 32 bits
     ///////////////////////////////////////////////////////////////////
     //
+    //       PFLOAT64
+    //
+    class pfloat64; // forward declaration
+    typedef uint64_t pfloat64_t; // a pfloat64 figure has 64 bits
+
+    ///////////////////////////////////////////////////////////////////
+    //
+    //       PFLOAT16D
+    //
+    class pfloat16d; // forward declaration
+    typedef uint16_t pfloat16d_t; // a pfloat16 figure has 16 bits
+    ///////////////////////////////////////////////////////////////////
+    //
+    //       PFLOAT32
+    //
+    class pfloat32d; // forward declaration
+    typedef uint32_t pfloat32d_t; // a pfloat32 figure has 32 bits
+    ///////////////////////////////////////////////////////////////////
+    //
+    //       PFLOAT64
+    //
+    class pfloat64d; // forward declaration
+    typedef uint64_t pfloat64d_t; // a pfloat64 figure has 64 bits
+
+    //
     //       PFLOAT (a dummy class to implement float in class form)
     //
     class pfloat; // forward declaration
     typedef float pfloat_t; // a pfloat figure has 32 bits in the form of a float
+    ///////////////////////////////////////////////////////////////////
+    //
+    //       PDOUBLE (a dummy class to implement double in class form)
+    //
+    class pdouble; // forward declaration
+    typedef double pdouble_t; // a pdouble figure has 64 bits in the form of a double
 
     ///////////////////////////////////////////////////////////////////////////////////
     // ----------------------------------------------
@@ -140,22 +184,9 @@ namespace pfloat_n {
 #define pfloat_create_32bitVectorTypeAndClass(base_t, vectorsize) \
     typedef pfloat_vectorType(base_t, _, vectorsize, _t)[vectorsize] __attribute__((aligned((vectorsize) * 4))); \
     class pfloat_vectorClass(base_t, _, vectorsize);
+
     // Create vector types like 'pfloat8_64_t' for a 64 element array of pfloat8 elements (64-byte aligned), ..
     // ... plus a corresponding class forward declaration like 'pfloat8_64'
-//    pfloat_create_8bitVectorTypeAndClass(pfloat8, 2)
-//    pfloat_create_8bitVectorTypeAndClass(pfloat8, 4)
-//    pfloat_create_8bitVectorTypeAndClass(pfloat8, 8)
-//    pfloat_create_8bitVectorTypeAndClass(pfloat8, 16)
-//    pfloat_create_8bitVectorTypeAndClass(pfloat8, 32)
-//    pfloat_create_8bitVectorTypeAndClass(pfloat8, 64)
-//
-//    pfloat_create_8bitVectorTypeAndClass(pfloat8low, 2)
-//    pfloat_create_8bitVectorTypeAndClass(pfloat8low, 4)
-//    pfloat_create_8bitVectorTypeAndClass(pfloat8low, 8)
-//    pfloat_create_8bitVectorTypeAndClass(pfloat8low, 16)
-//    pfloat_create_8bitVectorTypeAndClass(pfloat8low, 32)
-//    pfloat_create_8bitVectorTypeAndClass(pfloat8low, 64)
-
 #define pfloat_create_all8bitVectorTypeAndClass(base_t) \
     pfloat_create_8bitVectorTypeAndClass(base_t, 2) \
     pfloat_create_8bitVectorTypeAndClass(base_t, 4) \
@@ -182,13 +213,20 @@ namespace pfloat_n {
     pfloat_create_all8bitVectorTypeAndClass(pfloat8low)
     pfloat_create_all8bitVectorTypeAndClass(upfloat8high)
     pfloat_create_all8bitVectorTypeAndClass(upfloat8low)
+    pfloat_create_all8bitVectorTypeAndClass(pfloat8x)
     pfloat_create_all16bitVectorTypeAndClass(pfloat16high)
     pfloat_create_all16bitVectorTypeAndClass(pfloat16low)
     pfloat_create_all16bitVectorTypeAndClass(upfloat16high)
     pfloat_create_all16bitVectorTypeAndClass(upfloat16low)
+    pfloat_create_all16bitVectorTypeAndClass(pfloat16x)
     pfloat_create_all16bitVectorTypeAndClass(pfloat16)
     pfloat_create_all32bitVectorTypeAndClass(pfloat32)
+    pfloat_create_all32bitVectorTypeAndClass(pfloat64)
+    pfloat_create_all16bitVectorTypeAndClass(pfloat16d)
+    pfloat_create_all32bitVectorTypeAndClass(pfloat32d)
+    pfloat_create_all32bitVectorTypeAndClass(pfloat64d)
     pfloat_create_all32bitVectorTypeAndClass(pfloat)
+    pfloat_create_all32bitVectorTypeAndClass(pdouble)
 
 
     ///////////////////////////////////////////////////////////////////////////////////
